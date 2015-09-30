@@ -135,7 +135,7 @@ int mo1=-1;
     }
     if(nbfils<2) {
       printf("Bad tree\n");
-      exit(0);
+      exit(EXIT_FAILURE);
     }
 
 		/* create node(s) */
@@ -183,7 +183,7 @@ int mo1=-1;
  
   if(nbfils<3){
     printf("Bad tree 2\n");
-    exit(0);
+    exit(EXIT_FAILURE);
   }
 
   if(nbfils==3){
@@ -531,7 +531,7 @@ double maxlike(int nbseq, char** seq, char** seqname, int** ttree, double* lgbi,
     }
     if(drapeau2[i]==0){
       printf("Taxon %s not found in sequence file.\n", s_tree->node[i]->nom);
-      exit(0);
+      exit(EXIT_FAILURE);
     }
   }
   s_tree->nbseq=nbseq;
@@ -751,11 +751,11 @@ print1, print2;
 
   if(nb2<nb){
     printf("More species in sequence file than in tree file\n");
-    exit(0);
+    exit(EXIT_FAILURE);
   }
   if(nb2>nb){
     printf("More species in tree file than in sequence file\n");
-    exit(0);
+    exit(EXIT_FAILURE);
   }
 
   if(racine=='r'){
@@ -763,7 +763,7 @@ print1, print2;
   }
   else{
     printf("Tree must be rooted\n");
-    exit(0);
+    exit(EXIT_FAILURE);
   }
   nbbi--;
 
@@ -885,7 +885,7 @@ print1, print2;
 
     if(nbpair==0){
       printf("Error in split decomposition\n");
-      exit(0);
+      exit(EXIT_FAILURE);
     }
     opt->converge->PRECISION=truepres;
     maxlkh=lkh[0];
@@ -994,7 +994,7 @@ print1, print2;
   if(ctree1){
     outfile1=fopen("treefile.eqgc", "w");
     outfile2=fopen("treefile.ndgc", "w");
-    if(outfile1==NULL || outfile2==NULL){ printf("Cannot write tree file\n"); exit(0); }
+    if(outfile1==NULL || outfile2==NULL){ printf("Cannot write tree file\n"); exit(EXIT_FAILURE); }
     fprintf(outfile1, "%s\n", ctree1);
     fprintf(outfile2, "%s\n", ctree2);
     if(print1){
@@ -1051,7 +1051,7 @@ main(int argc, char** argv){
     in=fopen(argv[1], "r");
     if(!in){
       printf("Cannot find sequence file : %s\n", argv[1]);
-      exit(0);
+      exit(EXIT_FAILURE);
     }
     sprintf(nomfinseq, "%s", argv[1]);
     muet=1;
@@ -1081,7 +1081,7 @@ main(int argc, char** argv){
     treefile=fopen(argv[2], "r");
     if(!treefile){
       printf("Cannot find tree file : %s\n", argv[2]);
-      exit(0);
+      exit(EXIT_FAILURE);
     }
   }
   
@@ -1103,7 +1103,7 @@ main(int argc, char** argv){
     optfile=fopen(argv[3], "r");
     if(!optfile){
       printf("Cannot find option file : %s\n", argv[3]);
-      exit(0);
+      exit(EXIT_FAILURE);
     }
   }
 

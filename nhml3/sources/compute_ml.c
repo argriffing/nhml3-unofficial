@@ -201,7 +201,7 @@ int which_cas(int np1, int np2, int und1, int und2, int rootnode){
 
   
   printf("unexpected case : %d %d %d %d \n", np1, np2, und1, und2);
-exit(0);
+exit(EXIT_FAILURE);
   return 32;
   
 }
@@ -273,7 +273,7 @@ if( (retval=calloc(nbrelt,sizelt)) != NULL ) {
   return retval; 
 }
 printf("Not enough memory\n");
-exit(0);
+exit(EXIT_FAILURE);
 }
 
 void printmemory_init(){
@@ -2695,7 +2695,7 @@ int congruent(noeud nd, noeud from, int** btree, char** name, int nbseq, int j){
 	if(testbit(btree[j], i+1)) return 1; else return 0;
       }
     }
-    if(i==nbseq){ printf("erreur cong\n"); exit(0); }
+    if(i==nbseq){ printf("erreur cong\n"); exit(EXIT_FAILURE); }
   }
 
   if(from==nd->v1) {to1=nd->v2; to2=nd->v3;}
@@ -2703,7 +2703,7 @@ int congruent(noeud nd, noeud from, int** btree, char** name, int nbseq, int j){
   else if(from==nd->v3) {to1=nd->v1; to2=nd->v2;}
   else if(from==root->v1 && nd==root->v2) {to1=nd->v1; to2=nd->v2;}
   else if(from==root->v2 && nd==root->v1) {to1=nd->v1; to2=nd->v2;}
-  else { printf("erreur cong2 : nd=%s , from=%s\n", nd->nom, from->nom); exit(0);}
+  else { printf("erreur cong2 : nd=%s , from=%s\n", nd->nom, from->nom); exit(EXIT_FAILURE);}
 
   c1=congruent(to1, nd, btree, name, nbseq, j);
   c2=congruent(to2, nd, btree, name, nbseq, j);
@@ -3063,7 +3063,7 @@ void init4bases_simplemean(noeud from, noeud nd, int lgseq, double weightsum, do
   if (from==nd->v1) {nd1=nd->v2; nd2=nd->v3;}
   else if (from==nd->v2) {nd1=nd->v1; nd2=nd->v3;}
   else if (from==nd->v3) {nd1=nd->v1; nd2=nd->v2;}
-  else { printf("error initiating gc.\n"); exit(0); }
+  else { printf("error initiating gc.\n"); exit(EXIT_FAILURE); }
 
   if (nd1==NULL) {
     int i; 
@@ -3102,7 +3102,7 @@ void init4bases_balanced(noeud from, noeud nd, int lgseq, double weightsum, doub
   if (from==nd->v1) {nd1=nd->v2; nd2=nd->v3;}
   else if (from==nd->v2) {nd1=nd->v1; nd2=nd->v3;}
   else if (from==nd->v3) {nd1=nd->v1; nd2=nd->v2;}
-  else { printf("error initiating gc.\n"); exit(0); }
+  else { printf("error initiating gc.\n"); exit(EXIT_FAILURE); }
 
   nd->aeq=nd->ceq=nd->geq=nd->teq=0.25;
 
@@ -3847,7 +3847,7 @@ if(nd==root){
    for(j=0;j<4;j++)
      fprintf(probaoutcov, "p2[%d][%d]=%f\n", i, j, nd->p2[cl1][cl1][i][j]);
 
- if(cl1==gamma_nbcl-1) exit(0);
+ if(cl1==gamma_nbcl-1) exit(EXIT_FAILURE);
 }
  */
 
@@ -5688,7 +5688,7 @@ tdeb=time(NULL);
   if(nd==root) rootnode=1; else rootnode=0;
   cas=which_cas(pn, pn, und1, und2, rootnode);
   if(cas==32) return;
-  if(cas<=0) exit(0); 
+  if(cas<=0) exit(EXIT_FAILURE); 
 
   d2like_node(v1, param, pn, urank1, urank2);
   d2like_node(v2, param, pn, urank1, urank2);
@@ -5983,7 +5983,7 @@ void like_node(noeud nd){
         if(nd->x[cl][i][j]<0.){
           if(nd->x[cl][i][j]<ERROR_THRESHOLD){
 	    printf("i:%d , j:%d , nd->x[cl][i][j]:%.20f\n", i, j, nd->x[cl][i][j]);
-            exit(0);
+            exit(EXIT_FAILURE);
           }
           else nd->x[cl][i][j]=0.;
         }
@@ -6026,7 +6026,7 @@ void like_node_2sites(noeud nd){
         nd->x2sites[cl][i][j]=s1*s2;
         if(nd->x2sites[cl][i][j]<0.){
           printf("i:%d , j:%d , nd->x2sites[cl][i][j]:%.20f\n", i, j, nd->x2sites[cl][i][j]);
-          exit(0);
+          exit(EXIT_FAILURE);
         }
       }
     }
@@ -6269,7 +6269,7 @@ double minus_log_likelihood(double *paramprov){
     printf("parameters :\n");
     for(i=0;i<nbparam;i++) 
       printf("%.10f\n", *(s_tree->var_param[i]));
-    exit(0);
+    exit(EXIT_FAILURE);
 */
   }
 
@@ -6904,7 +6904,7 @@ ttotdeb=time(NULL);
     if(!out) out=fopen("resfile", "w");
     if(!out) {
       printf("Cannot create file\n");
-      exit(0);
+      exit(EXIT_FAILURE);
     }
   }
 

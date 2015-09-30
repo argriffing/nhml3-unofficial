@@ -75,7 +75,7 @@ void restore_lengths(tree* s_tree){
     }
     else {
       printf("unexpected unrooted tree\n");
-      exit(0);
+      exit(EXIT_FAILURE);
     }
   }
 
@@ -272,7 +272,7 @@ double maxlike(int nbseq, char** seq, char** seqname, char* c_tree, options opt,
 
   if (nbseq2>nbseq) {
     printf("More taxa in tree file than in sequence file\n");
-    exit(0);
+    exit(EXIT_FAILURE);
   }
 
 
@@ -375,7 +375,7 @@ double maxlike(int nbseq, char** seq, char** seqname, char* c_tree, options opt,
     }
     if(drapeau2[i]==0){
       printf("Taxon %s not found in sequence file.\n", s_tree->node[i]->nom);
-      exit(0);
+      exit(EXIT_FAILURE);
     }
   }
   s_tree->nbseq=nbseq=nbseq2;
@@ -567,7 +567,7 @@ main(int argc, char** argv){
     in=fopen(argv[1], "r");
     if(!in){
       printf("Cannot find sequence file : %s\n", argv[1]);
-      exit(0);
+      exit(EXIT_FAILURE);
     }
     sprintf(nomfinseq, "%s", argv[1]);
     muet=1;
@@ -586,7 +586,7 @@ main(int argc, char** argv){
   }
   if(nbseq%nbseqvrai!=0){
     printf("Bad sequence file %s\n", nomfinseq);
-    exit(0);
+    exit(EXIT_FAILURE);
   }
   nbdataset=nbseq/nbseqvrai;
 
@@ -613,7 +613,7 @@ main(int argc, char** argv){
     treefile=fopen(argv[2], "r");
     if(!treefile){
       printf("Cannot find tree file : %s\n", argv[2]);
-      exit(0);
+      exit(EXIT_FAILURE);
     }
   }
 
@@ -635,7 +635,7 @@ main(int argc, char** argv){
     if(*prov==']') i--;
     if(i!=0 && i!=1){
       printf("Unmatched brackets [] in tree file\n");
-      exit(0);
+      exit(EXIT_FAILURE);
     }
     if(i==1 && (*prov==';' || *prov=='(')) *prov='.';
     prov++;
@@ -678,7 +678,7 @@ main(int argc, char** argv){
     optfile=fopen(argv[3], "r");
     if(!optfile){
       printf("Cannot find option file : %s\n", argv[3]);
-      exit(0);
+      exit(EXIT_FAILURE);
     }
   }
   getoptions(&opt, optfile);
@@ -713,7 +713,7 @@ main(int argc, char** argv){
   ctree2=(char*)check_alloc(50*nbseq, sizeof(char));
   outfile1=fopen("treefile.eqgc", "w");
   outfile2=fopen("treefile.ndgc", "w");
-  if(outfile1==NULL || outfile2==NULL){ printf("Cannot write tree file\n"); exit(0); }
+  if(outfile1==NULL || outfile2==NULL){ printf("Cannot write tree file\n"); exit(EXIT_FAILURE); }
 
   for(i=0;i<nbdataset;i++){
     for(j=0;j<nbtree;j++){
