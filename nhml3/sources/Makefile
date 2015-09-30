@@ -7,7 +7,7 @@
 # $ make star_nh
 # $ make shake_nh
 #
-# Delete all exectuables and object files:
+# Delete all executables and object files:
 # $ make clean
 
 
