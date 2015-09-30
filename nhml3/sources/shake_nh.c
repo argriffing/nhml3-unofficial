@@ -1739,7 +1739,7 @@ double shake(int nb, char** seq, char** seqname, char* ctree, options opt, char*
  
 
 
-main(int argc, char** argv){
+int main(int argc, char** argv){
 
 /* 		A->0 ; C->1 ; G->2 ; T->3 		*/
 
@@ -1890,7 +1890,5 @@ main(int argc, char** argv){
     printf("%d seconds)\n\n", secondes);
   }
   
+  return 0;
 }
-
-
-

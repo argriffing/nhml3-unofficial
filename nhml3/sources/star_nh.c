@@ -1017,7 +1017,7 @@ print1, print2;
 
 
 
-main(int argc, char** argv){
+int main(int argc, char** argv){
 
 /* 		A->0 ; C->1 ; G->2 ; T->3 		*/
 
@@ -1137,7 +1137,6 @@ main(int argc, char** argv){
     if(jours || heures || minutes) printf("%d minutes, ", minutes);
     printf("%d seconds)\n\n", secondes);
   }
-  
+
+  return 0;
 }
-
-
