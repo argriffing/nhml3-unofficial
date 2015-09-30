@@ -1,0 +1,285 @@
+
+
+NHML is a package inluding programs for maximum-likelihood phylogenetic
+inferences from DNA sequence data using a non-homogeneous Markov model
+of DNA sequence evolution, as published in:
+
+Galtier N. & Gouy M. 1998. Mol. Biol. Evol. 15:871-879.
+
+The current version is NHML 3. It allows for unequal substitution
+rates among sites and covarion-like evolution:
+
+Galtier N., Tourasse N. & Gouy M. 1999. Science 283:220-221
+Galtier N. 2001 Mol. Biol. Evol. 18: 866-873
+
+The above references include general information about the model, the
+optimization algorithm, and the accuracy of estimates.
+
+
+The NHML package includes 3 programs:
+
+- eval_nh computes the likelihood of a given tree.
+
+- star_nh builds a tree according to the star-decomposition method (Saitou
+1988 JME 27:261) adapted for rooted trees.
+
+- shake_nh builds a tree according to the tree-pruning-regrafting method 
+(Felsenstein 1993, PHYLIP Package) adapted for rooted trees.
+
+
+
+		     -------  EVAL_NH  -------
+
+eval_nh can be seen as the user-tree version of star_nh or shake_nh. 
+
+
+-- INPUT --
+
+Three files are required: a sequence file, a tree file and an option file.
+
+The sequence file should be in MASE+ format (Faulkner and Jurka 1988 TIBS
+13:321, Galtier et al. 1996 CABIOS 12:543); a description is given below.
+Pre-defined sets of sites can be accounted for. This file may include more 
+than one data set; a multiple-data set MASE+ file is the concatenation of 
+several single-data set MASE+ files (lines beginning with ";;" indicates a 
+new data set). 
+
+The tree file should be in Neweek (PHYLIP, CLUSTAL, etc...) format. Tree(s)
+must be rooted. Branch lengths are not required. It may include more than
+one tree. Comments (within brackets) are allowed. Taxon names must be identical
+to names in the sequence file.
+
+The option file includes some algorithmic options (see below).
+
+Three example input files can be found in directory exple: exple.mase,
+exple.tree, exple.opt.
+
+
+Input file names can be supplied as command line arguments:
+
+  eval_nh exple.mase exple.tree exple.opt
+
+Alternatively, eval_nh can be called without arguments (and input file
+names are asked for). In the former case (arguments), pre-defined sets
+of sites are not taken into account: all sites are used.
+
+If more than one data sets and/or more than one tree are found within input
+files, data may be processed two ways, depending on the ALLCOUPLES option.
+If ALLCOUPLES is set to 0, equally ranked data sets and trees are processed
+together, i.e. tree 1 is evaluated with data set 1, tree 2 with data set 2, 
+etc... If ALLCOUPLES is set to 1, all possible (data set, tree) evaluations 
+are processed, i.e. (data set 1, tree1), (data set 1, tree 2), ...,
+(data set 1, tree p), ... (data set n, tree 1), ... (data set n, tree p).
+
+
+-- OUTPUT --
+
+  - files.
+
+2 tree files are created: treefile.eqgc and treefile.ndgc. Both include
+the evaluated tree(s), with estimated branch lengths and pseudo-bootstrap
+values. Pseudo-bootstrap values in file treefile.eqgc are estimated 
+equilibrium G+C contents (theta parameters in Galtier and Gouy 1998).
+These are parameters of the substitution process. Pseudo-bootstrap values
+in file treefile.ndgc are estimates of G+C contents at each node (excepting
+root node). Output trees can be viewed by using program NJPLOT (M. Gouy),
+distributed at
+	ftp://pbil.univ-lyon1.fr/pub/mol_phylogeny/njplot.
+
+An additional output file called detailed_out will be created if the
+EVAL_OUT option is set to 1. This file includes one line per evaluated
+tree. Trees are re-written (with branch lengths and pseudo-bootstrap like
+in treefile.eqgc) and parameter estimates are listed. 
+
+
+  - screen.
+
+The amount of screen display can be chosen through the PRINT1 and PRINT2 
+options:
+	if PRINT1 and PRINT2 are set to 0, the only screen output is the 
+likelihood of evaluated trees.
+	if PRINT1=1 and PRINT2=0, additional output is displayed, including
+parameter estimates.
+	if PRINT1 and PRINT2 are set to 1, steps of the iterative optimization
+algorithm are displayed.
+
+
+-- OPTIONS --
+
+The main running options are about which kind of parameter has to be 
+optimized (i.e. evaluated). Each option should be on a new line, in the 
+form OPTION_NAME=OPTION_VALUE. Option values may be integers, real numbers, 
+or strings, depending on the option. Comments (within /* */) are allowed.
+
+OPTIMIZE_LENGTH, OPTIMIZE_GC, OPTIMIZE_TITV, OPTIMIZE_ROOT, OPTIMIZE_ANC,
+OPTIMIZE_GAMMA, OPTIMIZE_COV, OPTIMIZE_PI indicate wether branch lengths,
+equilibrium G+C contents, transition/transversion ratio, root location,
+ancestral G+C content, shape of the Gamma distribution, covarion rate, and
+proportion of covarion sites should be optimized, respectively (1 -> optimized,
+0 -> not optimized).
+
+INIT_LENGTH, INIT_GC, INIT_TITV, INIT_ROOT, INIT_ANC, INIT_GAMMA, INITCOV
+and INIT_PI indicate the starting values of the optimization algorithm for
+branch lengths, equilibrium G+C contents, transition/transversion ratio,
+root location, ancestral G+C content, shape of the Gamma distribution, covarion
+rate and proportion of covarion sites, respectively.
+Starting values have little influence for optimized parameters (but avoid
+aberrant starting values if possible). However, if a given (kind of) 
+parameter should not be optimized (OPTIMIZE_???=0), then the starting 
+value is considered as the actual one, and has much influence on the 
+likelihood calcutation.
+
+  INIT_LENGTH: starting branch lengths may be either kept from the tree file 
+(KEEP) or computed from the data (REDO). In the former case, input tree must
+include branch lengths. In the latter case, wether input tree has branch
+lengths or not does not matter. To compute starting branch lengths from the
+data, pairwise distances are first computed according to Galtier and Gouy's 
+1995 method (PNAS 92:11317), then the distance matrix is fit to the evaluated 
+tree topology according to the least-square criterion.
+  INIT_GC: equilibrium G+C contents and ancestral G+C content can be either
+constant (CONST), variable (VAR), or balanced (BALANCED). In the constant case, 
+the mean G+C content over the whole data set is used. In the variable case, 
+equilibrium G+C contents at terminal branches are set to the observed G+C 
+content in corresponding sequences, and equilibrium G+C contents at internal 
+branches are set to the mean of equilibrium G+C contents of two underlying 
+connected branches. Balanced means that the equilibrium G+C-content is 
+assumed to be 50% in all branches. 
+  INIT_TITV: starting transition/transversion value is set to the supplied
+value if positive, or automatically computed according to Galtier and Gouy 
+1995 (PNAS 92:11317) if -1. is supplied.
+  INIT_ROOT: starting root location is set to the supplied value if positive.
+If -1. is supplied and the input tree has branch lengths, the input root
+location is kept. If -1. is supplied and the input tree has no branch 
+lengths, starting root location is set to 0.5.
+  INIT_GAMMA: starting Gamma shape-parameter is set to the supplied
+value if positive. A negative value means infinity, i.e. constant rates 
+among sites.
+  GAMMA_NBCLASS: number of classes of the discretized Gamma distribution.
+The running time will be proportional to this number.
+  INIT_COV: starting covarion rate is set to the supplied value if positive.
+A negative value means no covarion. The covarion model can be invoked only
+if a Gamma distribution is used (i.e. GAMMA_NBCL>1 and either positive
+INIT_GAMMA or OPTIMIZE_GAMMA=1 or both).
+  INIT_PI: starting proportion of covarion sites is set to the supplied value
+if positive. A negative value means that every site evolves in a covarion-like
+fashion. This makes sense only if a covarion model is invoked (positive INIT_COV
+or OPTIMIZE_COV=1 or both).
+
+
+Please note that constant rates among sites can be assumed by setting
+INIT_GAMMA=-1 and OPTIMIZE_GAMMA=0, that Tamura's (1992 MBE 9:678) model
+can be used by setting INIT_GC=CONST and OPTIMZE_GC=0, that Kimura's 
+(1980 JME 16:111) model can be used by setting INIT_GC=BALANCED and 
+OPTIMIZE_GC=0, and that Jukes & Cantor (1969) model can be used by
+setting INIT_GC=BALANCED, OPTIMIZE_GC=0, INIT_TITV=1 and OPTIMIZE_TITV=0.
+
+
+  PRECISION: number of digits. If PRECISION is set to 3, the iterative
+algorithm will stop when the difference berween consecutive log-likelihood 
+values is lower than 1.0e-3.
+
+  PRINT1, PRINT2, OUTPUT_COV: screen output options. See above.
+
+  EVAL_OUT: output option. See above.
+  ALLCOUPLES: input option. See above.
+  
+
+
+
+		     -------  STAR_NH  -------
+
+
+
+star_nh implements the star-decomposition algorithm (Saitou 1988). A star
+(unresolved) topology is used as the starting tree. Any pairwise grouping
+is tried and the likelihoods of resulting partly resolved trees are
+computed. The most likely grouping is kept, and the algorithm iterates
+with one taxon less. This algorithm mimicks the distance-based Neighbor-
+Joining method (Saitou and Nei 1987 MBE 4:406). 
+The star_nh program is adapted to the rooted case: the location of the root
+should be specified, and star-decomposition is performed in both "sides"
+of the tree.
+
+Most features of program eval_nh are relevant for star_nh. Below are listed
+features specific to star_nh.
+
+
+-- INPUT --
+
+Three files are required: a sequence file, a tree file and an option file.
+
+The sequence file should be in MASE+ format and should include a single data
+set. 
+
+A tree file is required to specify the location of the root: two groups of
+taxa must be defined, as in file exple.utree. A single tree is required.
+
+The ALLCOUPLES option is useless since a single data set can be processed.
+
+
+
+
+
+		     -------  SHAKE_NH  -------
+
+shake_nh implements the tree-pruning-regrafting algorithm (Felsenstein 1993). 
+A starting (resolved) tree is modified by pruning subtrees and moving them
+to other places. Resulting trees are evaluated. If a rearrangement results
+in an increase of the likelihood, the new tree is kept as a starting tree,
+and the algorithm iterates until no rearrangement increases the likelihood.
+
+Again, the shake_nh program is adapted to the rooted case. Again, most features
+of program eval_nh are relevant.
+
+
+-- INPUT --
+
+Three files are required: a sequence file, a tree file and an option file.
+
+The sequence file should be in MASE+ format and should include a single data
+set. 
+
+A tree file is required to specify the starting tree topology. A single, 
+resolved tree is required.
+
+The ALLCOUPLES option is useless since a single data set can be processed.
+
+
+-- OPTIONS --
+
+Four additional options are available:
+
+SH_G: number of internal branches crossed during rearrangements (G option in 
+phylip. See phylip manual). -1 means maximum G value.
+
+SH_MAXLCROSSED: Maximum length of crossed branches during rearrangements.
+Rearrangements that involve moving a subtree accross a branch of length higher
+than the supplied value are not considered. -1. means infinity.
+
+SH_MAXBOOTCROSS: Maximum bootstrap of crossed branches during rearrangements.
+Rearrangements that involve moving a subtree accross a branch with bootstrap higher
+than the supplied value are not considered. -1. means infinity. Bootstrap support
+should be supplied in the input tree according to the Neweek format.
+
+The latter two options allow the user to define a set of solid internal branches
+that should not be broken during rearrangements, avoiding many evaluations of
+unrealistic trees.
+
+SH_RESTART: One problem with shake_nh is potential huge running time. If the
+system craches before the end of the run, every intermediate results are
+lost. The SH_RESTART option helps in saving the evaluation of trees performed
+before a crash. When SH_RESTART is set to 1, two additional files will be
+created by shake_nh. File "evaluated_trees" include the list of trees already
+evaluated and their likelihood. File "current_best_tree" includes the best
+tree so far. After a crash have occurred, shake_nh can be restarted by typing:
+
+shake_nh mydata.mase current_best_tree myoptions evaluated_trees
+
+and setting again SH_RESTART to 1. Here, current_best_tree is taken as the
+starting tree, and the 4th argument makes sure that trees previously found
+less likely will not be evaluated again.
+
+
+
+
+

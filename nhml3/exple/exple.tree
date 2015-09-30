@@ -1,0 +1,3 @@
+(Aquifex:0.1, (Thermotoga:0.1, (Thermus:0.1, (Rickettsia:0.1, Deinococcus:0.1)50:0.1)75:0.1):0.1);
+
+(Aquifex:0.1, (Thermotoga:0.1, (Rickettsia:0.1, (Thermus:0.1, Deinococcus:0.1):0.1):0.1):0.1);
