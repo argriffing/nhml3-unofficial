@@ -11,21 +11,18 @@
 # $ make clean
 
 
-
 DEP_OBJECTS = simplex.o maseread.o compute_ml.o eigen.o
 EXECUTABLES = eval_nh star_nh shake_nh
 
-CFLAGS  = -c 
-
 # ANSI c compiler and linker
-CC = cc -O
+CC = c89 -O
 
 # Unless a specific target is specified, make all executables.
 all: $(EXECUTABLES)
 
 # I think this says how to make .o files from .c files...
 %.o : %.c
-	$(CC) $(CFLAGS) $?
+	$(CC) -c $?
 
 
 eval_nh: $(DEP_OBJECTS) eval_nh.o
