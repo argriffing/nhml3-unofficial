@@ -1,6 +1,18 @@
 
+# Make all executables by default:
+# $ make
+# 
+# These targets each make only a single executable:
+# $ make eval_nh
+# $ make star_nh
+# $ make shake_nh
+#
+# Delete all exectuables and object files:
+# $ make clean
+
+
+
 DEP_OBJECTS = simplex.o maseread.o compute_ml.o eigen.o
-DEP_SOURCES = simplex.c maseread.c compute_ml.c eigen.c
 EXECUTABLES = eval_nh star_nh shake_nh
 
 CFLAGS  = -c 
